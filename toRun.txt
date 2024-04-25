@@ -1,0 +1,4 @@
+g++ -c update.cpp -I./src/include
+g++ update.o -o sfml-app -L./src/lib -lsfml-graphics -lsfml-window -lsfml-system
+Set-Item Env:LD_LIBRARY_PATH ./src/lib
+./sfml-app
