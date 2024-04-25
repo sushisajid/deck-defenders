@@ -54,8 +54,9 @@ public:
     {
         return isDestroyed;
     }
-    void move(){
-        sprite.setPosition(sf::Vector2f(2,2));
+    void move()
+    {
+        sprite.setPosition(sf::Vector2f(2, 2));
     }
 };
 
@@ -101,7 +102,7 @@ public:
         }
         sprite.setTexture(highDefenceTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-        sprite.setPosition(sf::Vector2f(0,0));
+        sprite.setPosition(sf::Vector2f(0, 0));
     }
     void AttackEnemy() {}
     void TakeDamage(int damage)
@@ -125,7 +126,7 @@ public:
     {
 
         sf::Texture MidTexture;
-        if (!MidTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/barbarians.jpeg"))
+        if (!MidTexture.loadFromFile("images/barbarians.jpeg"))
         {
             cout << "High Attack sprite not loaded." << endl;
         }
@@ -174,7 +175,7 @@ public:
         Card::drawSprite(window); // Call base class drawSprite
     }
 };
-         
+
 int main()
 {
     //     int cds;
@@ -185,10 +186,9 @@ int main()
 
     sf::RenderWindow window(sf::VideoMode(600, 600), ("Deck Defenders"));
 
-    HighAttack*ha=nullptr;
-    HighDefence*hd=nullptr;
-    
-    
+    HighAttack *ha = nullptr;
+    HighDefence *hd = nullptr;
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -202,30 +202,32 @@ int main()
             if (event.type == sf::Event::KeyPressed)
             {
                 if (event.key.code == sf::Keyboard::Q)
-                {   
-                   if(ha==nullptr){
-                    ha=new HighAttack(100,5,10,5);  
-                   }
+                {
+                    if (ha == nullptr)
+                    {
+                        ha = new HighAttack(100, 5, 10, 5);
+                    }
                     // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
                 if (event.key.code == sf::Keyboard::W)
-                {   
-                   if(ha==nullptr){
-                    hd=new HighDefence(100,5,10,5);  
-                   }
+                {
+                    if (ha == nullptr)
+                    {
+                        hd = new HighDefence(100, 5, 10, 5);
+                    }
                     // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
             }
-            
         }
         window.clear();
-        if(ha!=nullptr){
+        if (ha != nullptr)
+        {
             ha->drawSprite(window);
         }
-        else if(hd!=nullptr){
+        else if (hd != nullptr)
+        {
             hd->drawSprite(window);
         }
         window.display();
     }
-
 }
