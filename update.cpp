@@ -39,7 +39,7 @@ public:
     void use()
     {
         if(isDestroyed) return;
-        
+
         auto currentTime = chrono::steady_clock::now();
         auto timeSinceLastUse = currentTime - lastUsedTime;
         auto remainingTime = chrono::seconds(cooldownSeconds) - timeSinceLastUse;
@@ -195,12 +195,7 @@ public:
 
 int main()
 {
-    //     int cds;
-    //     Legendary lg(100, 20, 20, cds);
-    //     lg.use();
-    //     //this_thread::sleep_for(chrono::seconds(3)); // system paused for 3 secs
-    //     lg.use();
-
+   
     sf::RenderWindow window(sf::VideoMode(600, 600), ("Deck Defenders"));
 
     HighAttack *ha = nullptr;
