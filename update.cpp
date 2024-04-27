@@ -16,7 +16,7 @@ class Card // Attack function will be called when two cards intersect with each 
 {
 protected:
     int health, defence, attack;
-    chrono::time_point<chrono::steady_clock> lastUsedTime;
+    time_point<steady_clock> lastUsedTime;
     int cooldownSeconds;
     bool isDestroyed; // Flag to indicate if the card is destroyed
     sf::Sprite sprite;
@@ -38,14 +38,20 @@ public:
 
     void use()
     {
-        if (steady_clock::now() >= lastUsedTime + chrono::seconds(cooldownSeconds)) // from the chrono library
+        if(isDestroyed) return;
+        
+        auto currentTime = chrono::steady_clock::now();
+        auto timeSinceLastUse = currentTime - lastUsedTime;
+        auto remainingTime = chrono::seconds(cooldownSeconds) - timeSinceLastUse;
+
+        if (remainingTime.count()<=0)
         {
-            lastUsedTime = chrono::steady_clock::now();
+            lastUsedTime = currentTime;
             cout << "Using card." << endl;
         }
         else
         {
-            cout << "Card is still on cooldown." << endl;
+            cout << "Card is still on cooldown. Remaining time: " << remainingTime.count() << " seconds." << endl;
         }
     }
     virtual void drawSprite(sf::RenderWindow &window)
@@ -221,6 +227,7 @@ int main()
                     if (ha == nullptr)
                     {
                         ha = new HighAttack(5, 5, 10, 5);
+                        ha->use();
                     }
                     // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
@@ -229,6 +236,7 @@ int main()
                     if (hd == nullptr)
                     {
                         hd = new HighDefence(5, 5, 10, 5);
+                        hd->use();
                     }
                     // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
@@ -248,6 +256,7 @@ int main()
                     }
                     // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
+                //checking if the object goes wheh health is zero 
                 if (event.key.code == sf::Keyboard::A && ha)
                 {
                     ha->setHealth(ha->getHealth() - 1);
