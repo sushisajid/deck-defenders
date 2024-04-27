@@ -27,6 +27,15 @@ public:
     virtual void AttackEnemy() = 0;
     virtual void TakeDamage(int damage) = 0;
 
+    void setHealth(int health)
+    {
+        this->health = health;
+    }
+    int getHealth()
+    {
+        return health;
+    }
+
     void use()
     {
         if (steady_clock::now() >= lastUsedTime + chrono::seconds(cooldownSeconds)) // from the chrono library
@@ -132,6 +141,7 @@ public:
         }
         sprite.setTexture(MidTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
+        sprite.setPosition(sf::Vector2f(600, 600));
     }
     void AttackEnemy() {}
     void TakeDamage(int damage)
@@ -160,6 +170,7 @@ public:
 
         sprite.setTexture(LegendaryTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
+        sprite.setPosition(sf::Vector2f(600, 0));
     }
     void AttackEnemy() {}
     void TakeDamage(int damage)
@@ -188,6 +199,10 @@ int main()
 
     HighAttack *ha = nullptr;
     HighDefence *hd = nullptr;
+    Mid *mid = nullptr;
+    Legendary *lg = nullptr;
+
+    int count = 0;
 
     while (window.isOpen())
     {
@@ -205,29 +220,129 @@ int main()
                 {
                     if (ha == nullptr)
                     {
-                        ha = new HighAttack(100, 5, 10, 5);
+                        ha = new HighAttack(5, 5, 10, 5);
                     }
                     // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
                 if (event.key.code == sf::Keyboard::W)
                 {
-                    if (ha == nullptr)
+                    if (hd == nullptr)
                     {
-                        hd = new HighDefence(100, 5, 10, 5);
+                        hd = new HighDefence(5, 5, 10, 5);
                     }
                     // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
+                if (event.key.code == sf::Keyboard::E)
+                {
+                    if (mid == nullptr)
+                    {
+                        mid = new Mid(5, 5, 10, 5);
+                    }
+                    // creating an object in this condition is not good, as it gets destroyed after we leave the if block
+                }
+                if (event.key.code == sf::Keyboard::R)
+                {
+                    if (lg == nullptr)
+                    {
+                        lg = new Legendary(5, 5, 10, 5);
+                    }
+                    // creating an object in this condition is not good, as it gets destroyed after we leave the if block
+                }
+                if (event.key.code == sf::Keyboard::A && ha)
+                {
+                    ha->setHealth(ha->getHealth() - 1);
+                }
+                if (event.key.code == sf::Keyboard::S && hd)
+                {
+                    hd->setHealth(hd->getHealth() - 1);
+                }
+                if (event.key.code == sf::Keyboard::D && lg)
+                {
+                    lg->setHealth(lg->getHealth() - 1);
+                }
+                if (event.key.code == sf::Keyboard::F && mid)
+                {
+                    mid->setHealth(mid->getHealth() - 1);
+                }
+                // to delete all objects
+
+                if (ha != nullptr)
+                {
+                    if (ha->getHealth() == 0)
+                    {
+                        delete ha;
+                        ha = nullptr;
+                    }
+                }
+                if (hd != nullptr)
+                {
+                    if (hd->getHealth() == 0)
+                    {
+                        delete hd;
+                        hd = nullptr;
+                    }
+                }
+                if (mid != nullptr)
+                {
+                    if (mid->getHealth() == 0)
+                    {
+                        delete mid;
+                        mid = nullptr;
+                    }
+                }
+                if (lg != nullptr)
+                {
+                    if (lg->getHealth() == 0)
+                    {
+                        delete lg;
+                        lg = nullptr;
+                    }
+                }
             }
         }
-        window.clear();
+
+        window.clear(sf::Color::Yellow);
         if (ha != nullptr)
-        {
             ha->drawSprite(window);
-        }
-        else if (hd != nullptr)
-        {
+        if (hd != nullptr)
             hd->drawSprite(window);
-        }
+        if (mid != nullptr)
+            mid->drawSprite(window);
+        if (lg != nullptr)
+            lg->drawSprite(window);
+        // if (ha != nullptr && hd != nullptr && mid != nullptr && lg != nullptr)
+        // {
+        //     count++;
+        //     cout << "all \n";
+        //     ha->drawSprite(window);
+        //     hd->drawSprite(window);
+        //     mid->drawSprite(window);
+        //     lg->drawSprite(window);
+        // }
+        // else if (ha != nullptr)
+        // {
+        //     count++;
+        //     cout << "ha \n";
+        //     ha->drawSprite(window);
+        // }
+        // else if (hd != nullptr)
+        // {
+        //     count++;
+        //     cout << "hd \n";
+        //     hd->drawSprite(window);
+        // }
+        // else if (mid != nullptr)
+        // {
+        //     count++;
+        //     cout << "mid \n";
+        //     mid->drawSprite(window);
+        // }
+        // else if (lg != nullptr)
+        // {
+        //     count++;
+        //     cout << "lg \n";
+        //     lg->drawSprite(window);
+        // }
         window.display();
     }
 }
