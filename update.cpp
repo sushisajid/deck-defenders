@@ -12,6 +12,64 @@ ussmein health, defense, aur attack stats hon gay
 using namespace std;
 using namespace chrono;
 
+class Tower
+{
+private:
+    int health;
+
+public:
+    sf::Texture TowerTexture;
+    sf::Sprite sprite; // Declare sprite variable
+
+    // Constructor
+    Tower(int h = 40) : health(h)
+    {
+        // Load the texture from the file
+        if (!TowerTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/tower.jpg"))
+        {
+            std::cout << "Tower sprite not loaded." << std::endl;
+        }
+        else
+        {
+            std::cout << " Tower sprite loaded." << std::endl;
+            // Set the texture of the sprite
+            sprite.setTexture(TowerTexture);
+            float scaleFactor = 0.5f; // You can adjust this value as needed
+
+            // Apply the scaling factors to the sprite
+            sprite.setScale(scaleFactor, scaleFactor);
+
+            // Set the origin of the sprite to its center
+            sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
+
+            // Set the position of the sprite
+            sprite.setPosition(sf::Vector2f(300, 300));
+        }
+    }
+
+    // Set position
+    void setPosition(float x, float y)
+    {
+        sprite.setPosition(sf::Vector2f(x, y));
+    }
+    void setHealth(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+            health = 0;
+    }
+
+    int getHealth() const
+    {
+        return health;
+    }
+
+    // Draw function
+    void draw(sf::RenderWindow &window)
+    {
+        window.draw(sprite);
+    }
+};
 class Card // Attack function will be called when two cards intersect with each other(sfml)
 {
 protected:
@@ -38,13 +96,14 @@ public:
 
     void use()
     {
-        if(isDestroyed) return;
+        if (isDestroyed)
+            return;
 
         auto currentTime = chrono::steady_clock::now();
         auto timeSinceLastUse = currentTime - lastUsedTime;
         auto remainingTime = chrono::seconds(cooldownSeconds) - timeSinceLastUse;
 
-        if (remainingTime.count()<=0)
+        if (remainingTime.count() <= 0)
         {
             lastUsedTime = currentTime;
             cout << "Using card." << endl;
@@ -54,7 +113,7 @@ public:
             cout << "Card is still on cooldown. Remaining time: " << remainingTime.count() << " seconds." << endl;
         }
     }
-    virtual void drawSprite(sf::RenderWindow &window)
+    void drawSprite(sf::RenderWindow &window)
     {
         if (!isDestroyed)
         {
@@ -78,15 +137,17 @@ public:
 class HighAttack : public Card
 {
 public:
+     sf::Texture highAttackTexture;
+    // sf::Sprite sprite; // Declare sprite variable
     HighAttack(int h = 100, int d = 5, int a = 10, int cds = 5) : Card(h, d, a, cds)
     {
 
-        sf::Texture highAttackTexture;
+        
         if (!highAttackTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/barbarians.jpeg"))
         {
             cout << "High Attack sprite not loaded." << endl;
         }
-        cout << "Sprite loaded." << endl;
+        cout << " High Attack sprite loaded." << endl;
         sprite.setTexture(highAttackTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
         sprite.setPosition(sf::Vector2f(300, 300));
@@ -100,7 +161,7 @@ public:
             health = 0;
         }
     }
-    void drawSprite(sf::RenderWindow &window) override
+    void drawSprite(sf::RenderWindow &window)
     {
         Card::drawSprite(window); // Call base class drawSprite
     }
@@ -108,13 +169,16 @@ public:
 class HighDefence : public Card
 {
 public:
+    sf::Texture highDefenceTexture;
+    //sf::Sprite sprite; // Declare sprite variable
     HighDefence(int h = 100, int d = 10, int a = 5, int cds = 5) : Card(h, d, a, cds)
     {
-        sf::Texture highDefenceTexture;
+        
         if (!highDefenceTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/Giant.jpg"))
-        {
+        {                                      
             cout << "High Defence sprite not loaded." << endl;
         }
+        cout<<"High Defence sprite loaded."<<endl;
         sprite.setTexture(highDefenceTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
         sprite.setPosition(sf::Vector2f(0, 0));
@@ -128,7 +192,7 @@ public:
             health = 0;
         }
     }
-    void drawSprite(sf::RenderWindow &window) override
+    void drawSprite(sf::RenderWindow &window)
     {
         Card::drawSprite(window); // Call base class drawSprite
     }
@@ -137,14 +201,16 @@ public:
 class Mid : public Card
 {
 public:
+     sf::Texture MidTexture;
+    // sf::Sprite sprite; // Declare sprite variable
     Mid(int h = 100, int d = 5, int a = 5, int cds = 5) : Card(h, d, a, cds)
     {
 
-        sf::Texture MidTexture;
-        if (!MidTexture.loadFromFile("images/barbarians.jpeg"))
+        if (!MidTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/barbarians.jpeg"))
         {
-            cout << "High Attack sprite not loaded." << endl;
+            cout << "Mid sprite not loaded." << endl;
         }
+        cout<<"Mid sprite loaded."<<endl;
         sprite.setTexture(MidTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
         sprite.setPosition(sf::Vector2f(600, 600));
@@ -158,7 +224,7 @@ public:
             health = 0;
         }
     }
-    void drawSprite(sf::RenderWindow &window) override
+    void drawSprite(sf::RenderWindow &window)
     {
         Card::drawSprite(window); // Call base class drawSprite
     }
@@ -166,14 +232,16 @@ public:
 class Legendary : public Card
 {
 public:
+    sf::Texture LegendaryTexture;
+    // sf::Sprite sprite; // Declare sprite variable
     Legendary(int h = 100, int d = 20, int a = 20, int cds = 10) : Card(h, d, a, cds)
     {
-        sf::Texture LegendaryTexture;
+        
         if (!LegendaryTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/barbarians.jpeg"))
         {
-            cout << "High Attack sprite not loaded." << endl;
+            cout << "Legendary sprite not loaded." << endl;
         }
-
+        cout<<"Legendary sprite loaded."<<endl;
         sprite.setTexture(LegendaryTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
         sprite.setPosition(sf::Vector2f(600, 0));
@@ -187,7 +255,7 @@ public:
             health = 0;
         }
     }
-    void drawSprite(sf::RenderWindow &window) override
+    void drawSprite(sf::RenderWindow &window)
     {
         Card::drawSprite(window); // Call base class drawSprite
     }
@@ -195,18 +263,40 @@ public:
 
 int main()
 {
-   
+
     sf::RenderWindow window(sf::VideoMode(600, 600), ("Deck Defenders"));
 
     HighAttack *ha = nullptr;
     HighDefence *hd = nullptr;
     Mid *mid = nullptr;
     Legendary *lg = nullptr;
+    Tower PlayerTower;
+    Tower EnemyTower;
 
     int count = 0;
 
+    sf::Vector2u windowSize = window.getSize();
+    float windowWidth = static_cast<float>(windowSize.x);
+    float windowHeight = static_cast<float>(windowSize.y);
+
+    //(half of window width)
+    float xMiddle = windowWidth / 2;
+
+    //  (close to the top of the window)
+    float yTop = 0;
+
+    // (close to the bottom of the window)
+    float yBottom = windowHeight;
+
+    // Set the position of the top middle tower
+    EnemyTower.setPosition(xMiddle, yTop);
+
+    // Set the position of the bottom middle tower
+    PlayerTower.setPosition(xMiddle, yBottom);
+
     while (window.isOpen())
     {
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -217,6 +307,7 @@ int main()
 
             if (event.type == sf::Event::KeyPressed)
             {
+
                 if (event.key.code == sf::Keyboard::Q)
                 {
                     if (ha == nullptr)
@@ -235,7 +326,7 @@ int main()
                     }
                     // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
-                if (event.key.code == sf::Keyboard::E)
+                if (event.key.code == sf::Keyboard::E) // sprite not loading!
                 {
                     if (mid == nullptr)
                     {
@@ -251,7 +342,7 @@ int main()
                     }
                     // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
-                //checking if the object goes wheh health is zero 
+                // checking if the object goes wheh health is zero
                 if (event.key.code == sf::Keyboard::A && ha)
                 {
                     ha->setHealth(ha->getHealth() - 1);
@@ -302,10 +393,23 @@ int main()
                         lg = nullptr;
                     }
                 }
+
+                if (EnemyTower.getHealth() == 0)
+                {
+                    cout << "Player won !" << endl;
+                    // delete the sprite!
+                }
+                if (PlayerTower.getHealth() == 0)
+                {
+                    cout << "Enemy won !" << endl;
+                    // delete the sprite!
+                }
             }
         }
 
         window.clear(sf::Color::Yellow);
+        EnemyTower.draw(window);
+        PlayerTower.draw(window);
         if (ha != nullptr)
             ha->drawSprite(window);
         if (hd != nullptr)
