@@ -70,17 +70,20 @@ public:
         window.draw(sprite);
     }
 };
+
 class Card // Attack function will be called when two cards intersect with each other(sfml)
 {
 protected:
     int health, defence, attack;
-    time_point<steady_clock> lastUsedTime;
+    // time_point<steady_clock> lastUsedTime;
     int cooldownSeconds;
     bool isDestroyed; // Flag to indicate if the card is destroyed
     sf::Sprite sprite;
 
 public:
-    Card(int h, int d, int a, int cds = 5) : health(h), defence(d), attack(a), cooldownSeconds(cds) {}
+    Card(int h, int d, int a, int cds = 5) : health(h), defence(d), attack(a), cooldownSeconds(cds)
+    {
+    }
 
     virtual void AttackEnemy() = 0;
     virtual void TakeDamage(int damage) = 0;
@@ -93,56 +96,36 @@ public:
     {
         return health;
     }
-
-    void use()
+ void drawSprite(sf::RenderWindow &window)
+{
+    if (!isDestroyed)
     {
-        if (isDestroyed)
-            return;
-
-        auto currentTime = chrono::steady_clock::now();
-        auto timeSinceLastUse = currentTime - lastUsedTime;
-        auto remainingTime = chrono::seconds(cooldownSeconds) - timeSinceLastUse;
-
-        if (remainingTime.count() <= 0)
-        {
-            lastUsedTime = currentTime;
-            cout << "Using card." << endl;
-        }
-        else
-        {
-            cout << "Card is still on cooldown. Remaining time: " << remainingTime.count() << " seconds." << endl;
-        }
+        window.draw(sprite);
     }
-    void drawSprite(sf::RenderWindow &window)
-    {
-        if (!isDestroyed)
-        {
-            window.draw(sprite);
-        }
-    }
-    void destroy()
-    {
-        isDestroyed = true;
-    }
-    bool destroyed()
-    {
-        return isDestroyed;
-    }
-    void move()
-    {
-        sprite.setPosition(sf::Vector2f(2, 2));
-    }
-};
+}
+void destroy()
+{
+    isDestroyed = true;
+}
+bool destroyed()
+{
+    return isDestroyed;
+}
+void move()
+{
+    sprite.setPosition(sf::Vector2f(2, 2));
+}
+}
+;
 
 class HighAttack : public Card
 {
 public:
-     sf::Texture highAttackTexture;
+    sf::Texture highAttackTexture;
     // sf::Sprite sprite; // Declare sprite variable
     HighAttack(int h = 100, int d = 5, int a = 10, int cds = 5) : Card(h, d, a, cds)
     {
 
-        
         if (!highAttackTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/barbarians.jpeg"))
         {
             cout << "High Attack sprite not loaded." << endl;
@@ -170,15 +153,15 @@ class HighDefence : public Card
 {
 public:
     sf::Texture highDefenceTexture;
-    //sf::Sprite sprite; // Declare sprite variable
+    // sf::Sprite sprite; // Declare sprite variable
     HighDefence(int h = 100, int d = 10, int a = 5, int cds = 5) : Card(h, d, a, cds)
     {
-        
+
         if (!highDefenceTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/Giant.jpg"))
-        {                                      
+        {
             cout << "High Defence sprite not loaded." << endl;
         }
-        cout<<"High Defence sprite loaded."<<endl;
+        cout << "High Defence sprite loaded." << endl;
         sprite.setTexture(highDefenceTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
         sprite.setPosition(sf::Vector2f(0, 0));
@@ -201,7 +184,7 @@ public:
 class Mid : public Card
 {
 public:
-     sf::Texture MidTexture;
+    sf::Texture MidTexture;
     // sf::Sprite sprite; // Declare sprite variable
     Mid(int h = 100, int d = 5, int a = 5, int cds = 5) : Card(h, d, a, cds)
     {
@@ -210,7 +193,7 @@ public:
         {
             cout << "Mid sprite not loaded." << endl;
         }
-        cout<<"Mid sprite loaded."<<endl;
+        cout << "Mid sprite loaded." << endl;
         sprite.setTexture(MidTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
         sprite.setPosition(sf::Vector2f(600, 600));
@@ -236,12 +219,12 @@ public:
     // sf::Sprite sprite; // Declare sprite variable
     Legendary(int h = 100, int d = 20, int a = 20, int cds = 10) : Card(h, d, a, cds)
     {
-        
+
         if (!LegendaryTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/barbarians.jpeg"))
         {
             cout << "Legendary sprite not loaded." << endl;
         }
-        cout<<"Legendary sprite loaded."<<endl;
+        cout << "Legendary sprite loaded." << endl;
         sprite.setTexture(LegendaryTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
         sprite.setPosition(sf::Vector2f(600, 0));
@@ -260,6 +243,21 @@ public:
         Card::drawSprite(window); // Call base class drawSprite
     }
 };
+
+bool coolDown(int coolDownSeconds){
+    auto currentTime = std::chrono::steady_clock::now();
+    static auto startTime = currentTime;
+    auto timeSinceLast = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime);
+
+    if (timeSinceLast < std::chrono::seconds(coolDownSeconds)) {
+        std::cout << "Card is still on cooldown. Remaining time: " << (coolDownSeconds - timeSinceLast.count()) << " seconds." << std::endl;
+        return false;
+    }
+     else {
+        startTime = currentTime; 
+        return true;  
+    }
+}
 
 int main()
 {
@@ -294,8 +292,10 @@ int main()
     // Set the position of the bottom middle tower
     PlayerTower.setPosition(xMiddle, yBottom);
 
+    int flag=1;
     while (window.isOpen())
     {
+    
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -311,54 +311,79 @@ int main()
                 if (event.key.code == sf::Keyboard::Q)
                 {
                     if (ha == nullptr)
-                    {
-                        ha = new HighAttack(5, 5, 10, 5);
-                        ha->use();
+                    {       
+                        if(flag==0){
+
+                            if(coolDown(5)==true){
+
+                                ha = new HighAttack(5, 5, 10, 5);
+                            }   
+                        }
+                        else {
+                            ha = new HighAttack(5, 5, 10, 5);
+                            flag=0;
+                        }
                     }
                     // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
                 if (event.key.code == sf::Keyboard::W)
                 {
                     if (hd == nullptr)
-                    {
-                        hd = new HighDefence(5, 5, 10, 5);
-                        hd->use();
+                    { 
+                         if(flag==0){
+
+                            if(coolDown(5)==true){
+
+                                hd = new HighDefence(5, 5, 10, 5);
+                               
+                            }   
+                        }
+                            else{
+                                hd = new HighDefence(5, 5, 10, 5);
+                                flag=0;
+                            }
                     }
-                    // creating an object in this condition is not good, as it gets destroyed after we leave the if block
+
                 }
+            
                 if (event.key.code == sf::Keyboard::E) // sprite not loading!
                 {
                     if (mid == nullptr)
                     {
-                        mid = new Mid(5, 5, 10, 5);
+                        if(flag==0){
+
+                            if(coolDown(5)==true){
+
+                                mid = new Mid(5, 5, 10, 5);
+                               
+                            }   
+                        }
+                        else{
+                            mid = new Mid(5, 5, 10, 5);
+                            flag=0;
+                        }
                     }
-                    // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
                 if (event.key.code == sf::Keyboard::R)
                 {
                     if (lg == nullptr)
                     {
-                        lg = new Legendary(5, 5, 10, 5);
+                        if(flag==0){
+
+                            if(coolDown(10)==true){
+
+                                lg = new Legendary(5, 5, 10, 5);
+                               
+                            }   
+                        }
+                            else{
+                                lg = new Legendary(5, 5, 10, 5);
+                                flag=0;
+                            }
                     }
-                    // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
-                // checking if the object goes wheh health is zero
-                if (event.key.code == sf::Keyboard::A && ha)
-                {
-                    ha->setHealth(ha->getHealth() - 1);
-                }
-                if (event.key.code == sf::Keyboard::S && hd)
-                {
-                    hd->setHealth(hd->getHealth() - 1);
-                }
-                if (event.key.code == sf::Keyboard::D && lg)
-                {
-                    lg->setHealth(lg->getHealth() - 1);
-                }
-                if (event.key.code == sf::Keyboard::F && mid)
-                {
-                    mid->setHealth(mid->getHealth() - 1);
-                }
+               
+            }
                 // to delete all objects
 
                 if (ha != nullptr)
@@ -404,7 +429,6 @@ int main()
                     cout << "Enemy won !" << endl;
                     // delete the sprite!
                 }
-            }
         }
 
         window.clear(sf::Color::Yellow);
@@ -418,39 +442,6 @@ int main()
             mid->drawSprite(window);
         if (lg != nullptr)
             lg->drawSprite(window);
-        // if (ha != nullptr && hd != nullptr && mid != nullptr && lg != nullptr)
-        // {
-        //     count++;
-        //     cout << "all \n";
-        //     ha->drawSprite(window);
-        //     hd->drawSprite(window);
-        //     mid->drawSprite(window);
-        //     lg->drawSprite(window);
-        // }
-        // else if (ha != nullptr)
-        // {
-        //     count++;
-        //     cout << "ha \n";
-        //     ha->drawSprite(window);
-        // }
-        // else if (hd != nullptr)
-        // {
-        //     count++;
-        //     cout << "hd \n";
-        //     hd->drawSprite(window);
-        // }
-        // else if (mid != nullptr)
-        // {
-        //     count++;
-        //     cout << "mid \n";
-        //     mid->drawSprite(window);
-        // }
-        // else if (lg != nullptr)
-        // {
-        //     count++;
-        //     cout << "lg \n";
-        //     lg->drawSprite(window);
-        // }
         window.display();
     }
 }
