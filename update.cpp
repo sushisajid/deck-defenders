@@ -65,7 +65,7 @@ public:
     }
 
     // Draw function
-    void draw(sf::RenderWindow &window)
+    void draw(sf::RenderWindow& window)
     {
         window.draw(sprite);
     }
@@ -96,6 +96,14 @@ public:
     {
         return health;
     }
+
+    void draw(sf::RenderWindow &window)
+{
+    if (!isDestroyed)
+    {
+        window.draw(sprite);
+    }
+}
  void drawSprite(sf::RenderWindow &window)
 {
     if (!isDestroyed)
@@ -111,10 +119,20 @@ bool destroyed()
 {
     return isDestroyed;
 }
-void move()
+void setInitPos()
 {
     sprite.setPosition(sf::Vector2f(2, 2));
 }
+void move()
+{
+    float xpos , ypos ;
+    xpos = sprite.getPosition().x;
+    ypos = sprite.getPosition().y ;
+
+    sprite.setPosition(sf::Vector2f(xpos, ypos-0.02));
+    
+}
+
 }
 ;
 
@@ -133,7 +151,8 @@ public:
         cout << " High Attack sprite loaded." << endl;
         sprite.setTexture(highAttackTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-        sprite.setPosition(sf::Vector2f(300, 300));
+        sprite.setScale(sf::Vector2f(0.3,0.3));
+        sprite.setPosition(sf::Vector2f(300, 400));
     }
     void AttackEnemy() {}
     void TakeDamage(int damage)
@@ -164,7 +183,8 @@ public:
         cout << "High Defence sprite loaded." << endl;
         sprite.setTexture(highDefenceTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-        sprite.setPosition(sf::Vector2f(0, 0));
+        sprite.setScale(sf::Vector2f(0.3,0.3));
+        sprite.setPosition(sf::Vector2f(300, 400));
     }
     void AttackEnemy() {}
     void TakeDamage(int damage)
@@ -196,7 +216,8 @@ public:
         cout << "Mid sprite loaded." << endl;
         sprite.setTexture(MidTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-        sprite.setPosition(sf::Vector2f(600, 600));
+        sprite.setScale(sf::Vector2f(0.3,0.3));
+        sprite.setPosition(sf::Vector2f(300, 400));
     }
     void AttackEnemy() {}
     void TakeDamage(int damage)
@@ -227,7 +248,8 @@ public:
         cout << "Legendary sprite loaded." << endl;
         sprite.setTexture(LegendaryTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-        sprite.setPosition(sf::Vector2f(600, 0));
+        sprite.setScale(sf::Vector2f(0.3,0.3));
+        sprite.setPosition(sf::Vector2f(300, 400));
     }
     void AttackEnemy() {}
     void TakeDamage(int damage)
@@ -261,13 +283,23 @@ bool coolDown(int coolDownSeconds){
 
 int main()
 {
-
     sf::RenderWindow window(sf::VideoMode(600, 600), ("Deck Defenders"));
 
-    HighAttack *ha = nullptr;
-    HighDefence *hd = nullptr;
-    Mid *mid = nullptr;
-    Legendary *lg = nullptr;
+    //the max num of each class cards can be 10
+    int MaxCardsOfEachType = 10;
+
+    //allocated memory for each class (Max of 10 cards of each type)
+    HighAttack** ha = new HighAttack*[MaxCardsOfEachType];
+    HighDefence** hd = new HighDefence*[MaxCardsOfEachType];
+    Mid** mid = new Mid*[MaxCardsOfEachType];
+    Legendary** lg = new Legendary*[MaxCardsOfEachType];
+
+    int haCount = 0;
+    int hdCount = 0;
+    int midCount = 0;
+    int lgCount = 0;
+
+    //created two towers objects
     Tower PlayerTower;
     Tower EnemyTower;
 
@@ -281,10 +313,10 @@ int main()
     float xMiddle = windowWidth / 2;
 
     //  (close to the top of the window)
-    float yTop = 0;
+    float yTop = 70;
 
     // (close to the bottom of the window)
-    float yBottom = windowHeight;
+    float yBottom = windowHeight-70;
 
     // Set the position of the top middle tower
     EnemyTower.setPosition(xMiddle, yTop);
@@ -292,11 +324,9 @@ int main()
     // Set the position of the bottom middle tower
     PlayerTower.setPosition(xMiddle, yBottom);
 
-    int flag=1;
+    int flag = 1;
     while (window.isOpen())
     {
-    
-
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -310,138 +340,184 @@ int main()
 
                 if (event.key.code == sf::Keyboard::Q)
                 {
-                    if (ha == nullptr)
-                    {       
-                        if(flag==0){
-
-                            if(coolDown(5)==true){
-
-                                ha = new HighAttack(5, 5, 10, 5);
-                            }   
+                    if (haCount < MaxCardsOfEachType)
+                    {
+                        if (flag == 0)
+                        {
+                            if (coolDown(5) == true)
+                            {
+                                ha[haCount] = new HighAttack(5, 5, 10, 5);
+                                haCount++;
+                            }
                         }
-                        else {
-                            ha = new HighAttack(5, 5, 10, 5);
-                            flag=0;
+                        else
+                        {
+                            ha[haCount] = new HighAttack(5, 5, 10, 5);
+                            haCount++;
+                            flag = 0;
                         }
                     }
-                    // creating an object in this condition is not good, as it gets destroyed after we leave the if block
                 }
                 if (event.key.code == sf::Keyboard::W)
                 {
-                    if (hd == nullptr)
-                    { 
-                         if(flag==0){
-
-                            if(coolDown(5)==true){
-
-                                hd = new HighDefence(5, 5, 10, 5);
-                               
-                            }   
-                        }
-                            else{
-                                hd = new HighDefence(5, 5, 10, 5);
-                                flag=0;
-                            }
-                    }
-
-                }
-            
-                if (event.key.code == sf::Keyboard::E) // sprite not loading!
-                {
-                    if (mid == nullptr)
+                    if (hdCount < MaxCardsOfEachType)
                     {
-                        if(flag==0){
-
-                            if(coolDown(5)==true){
-
-                                mid = new Mid(5, 5, 10, 5);
-                               
-                            }   
+                        if (flag == 0)
+                        {
+                            if (coolDown(5) == true)
+                            {
+                                hd[hdCount] = new HighDefence(5, 5, 10, 5);
+                                hdCount++;
+                            }
                         }
-                        else{
-                            mid = new Mid(5, 5, 10, 5);
-                            flag=0;
+                        else
+                        {
+                            hd[hdCount] = new HighDefence(5, 5, 10, 5);
+                            hdCount++;
+                            flag = 0;
+                        }
+                    }
+                }
+                if (event.key.code == sf::Keyboard::E) 
+                {
+                    if (midCount < MaxCardsOfEachType)
+                    {
+                        if (flag == 0)
+                        {
+                            if (coolDown(5) == true)
+                            {
+                                mid[midCount] = new Mid(5, 5, 10, 5);
+                                midCount++;
+                            }
+                        }
+                        else
+                        {
+                            mid[midCount] = new Mid(5, 5, 10, 5);
+                            midCount++;
+                            flag = 0;
                         }
                     }
                 }
                 if (event.key.code == sf::Keyboard::R)
                 {
-                    if (lg == nullptr)
+                    if (lgCount < MaxCardsOfEachType)
                     {
-                        if(flag==0){
-
-                            if(coolDown(10)==true){
-
-                                lg = new Legendary(5, 5, 10, 5);
-                               
-                            }   
-                        }
-                            else{
-                                lg = new Legendary(5, 5, 10, 5);
-                                flag=0;
+                        if (flag == 0)
+                        {
+                            if (coolDown(10) == true)
+                            {
+                                lg[lgCount] = new Legendary(5, 5, 10, 5);
+                                lgCount++;
                             }
+                        }
+                        else
+                        {
+                            lg[lgCount] = new Legendary(5, 5, 10, 5);
+                            lgCount++;
+                            flag = 0;
+                        }
                     }
                 }
-               
             }
-                // to delete all objects
 
-                if (ha != nullptr)
-                {
-                    if (ha->getHealth() == 0)
-                    {
-                        delete ha;
-                        ha = nullptr;
-                    }
-                }
-                if (hd != nullptr)
-                {
-                    if (hd->getHealth() == 0)
-                    {
-                        delete hd;
-                        hd = nullptr;
-                    }
-                }
-                if (mid != nullptr)
-                {
-                    if (mid->getHealth() == 0)
-                    {
-                        delete mid;
-                        mid = nullptr;
-                    }
-                }
-                if (lg != nullptr)
-                {
-                    if (lg->getHealth() == 0)
-                    {
-                        delete lg;
-                        lg = nullptr;
-                    }
-                }
+            // to delete all objects
 
-                if (EnemyTower.getHealth() == 0)
+            for (int i = 0; i < haCount; i++)
+            {
+                if (ha[i]!= nullptr)
                 {
-                    cout << "Player won !" << endl;
-                    // delete the sprite!
+                    if (ha[i]->getHealth() == 0)
+                    {
+                        delete ha[i];
+                        ha[i] = nullptr;
+                    }
                 }
-                if (PlayerTower.getHealth() == 0)
+            }
+            for (int i = 0; i < hdCount; i++)
+            {
+                if (hd[i]!= nullptr)
                 {
-                    cout << "Enemy won !" << endl;
-                    // delete the sprite!
+                    if (hd[i]->getHealth() == 0)
+                    {
+                       delete hd[i];
+                        hd[i] = nullptr;
+                    }
                 }
+            }
+            for (int i = 0; i < midCount; i++)
+            {
+                if (mid[i]!= nullptr)
+                {
+                    if (mid[i]->getHealth() == 0)
+                    {
+                        delete mid[i];
+                        mid[i] = nullptr;
+                    }
+                }
+            }
+            for (int i = 0; i < lgCount; i++)
+            {
+                if (lg[i]!= nullptr)
+                {
+                    if (lg[i]->getHealth() == 0)
+                    {
+                        delete lg[i];
+                        lg[i] = nullptr;
+                    }
+                }
+            }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            {
+                flag = 1;
+            }
         }
 
-        window.clear(sf::Color::Yellow);
-        EnemyTower.draw(window);
+        window.clear();
+
+        //draw all objects
+        for (int i = 0; i < haCount; ++i)
+        {
+            if (ha[i])
+            {
+               
+                ha[i]->draw(window);
+                ha[i]->move();
+            }
+        }
+        for (int i = 0; i < hdCount; ++i)
+        {
+            if (hd[i])
+            {
+                
+                hd[i]->draw(window);
+                hd[i]->move();
+            }
+        }
+        for (int i = 0; i < midCount; ++i)
+        {
+            if (mid[i])
+            {
+                
+                mid[i]->draw(window);
+                mid[i]->move();
+            }
+        }
+        for (int i = 0; i < lgCount; ++i)
+        {
+            if (lg[i])
+            {
+               
+                lg[i]->draw(window);
+                lg[i]->move();
+            }
+        }
+
         PlayerTower.draw(window);
-        if (ha != nullptr)
-            ha->drawSprite(window);
-        if (hd != nullptr)
-            hd->drawSprite(window);
-        if (mid != nullptr)
-            mid->drawSprite(window);
-        if (lg != nullptr)
-            lg->drawSprite(window);
+        EnemyTower.draw(window);
+
         window.display();
     }
+
+    return 0;
 }
