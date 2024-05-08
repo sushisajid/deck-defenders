@@ -34,7 +34,7 @@ public:
             std::cout << " Tower sprite loaded." << std::endl;
             // Set the texture of the sprite
             sprite.setTexture(TowerTexture);
-            float scaleFactor = 0.3f; // You can adjust this value as needed
+            float scaleFactor = 0.5f; // You can adjust this value as needed
 
             // Apply the scaling factors to the sprite
             sprite.setScale(scaleFactor, scaleFactor);
@@ -46,6 +46,11 @@ public:
             sprite.setPosition(sf::Vector2f(300, 300));
         }
     }
+    // get sprite
+    sf::Sprite getSprite()
+    {
+        return sprite;
+    }
 
     // Set position
     void setPosition(float x, float y)
@@ -55,6 +60,7 @@ public:
     void setHealth(int damage)
     {
         health -= damage;
+        cout << health << " ";
         if (health <= 0)
             health = 0;
     }
@@ -69,21 +75,16 @@ public:
     {
         window.draw(sprite);
     }
-    sf::Sprite getSprite()
-    {
-        return sprite;
-    }
 };
 
 class Card // Attack function will be called when two cards intersect with each other(sfml)
 {
 protected:
     int health, defence, attack;
-    
+    // time_point<steady_clock> lastUsedTime;
     int cooldownSeconds;
     bool isDestroyed; // Flag to indicate if the card is destroyed
     sf::Sprite sprite;
-    bool moveFlag = true;
 
 public:
     Card(int h, int d, int a, int cds = 5) : health(h), defence(d), attack(a), cooldownSeconds(cds)
@@ -124,24 +125,21 @@ public:
     {
         return isDestroyed;
     }
-    sf::Sprite getSprite()
+    void setInitPos()
     {
-        return sprite;
+        sprite.setPosition(sf::Vector2f(2, 2));
     }
     void move()
     {
-        float x, y;
-        x = sprite.getPosition().x;
-        y = sprite.getPosition().y;
-        sprite.setPosition(sf::Vector2f(x, y - 5));
+        float xpos, ypos;
+        xpos = sprite.getPosition().x;
+        ypos = sprite.getPosition().y;
+
+        sprite.setPosition(sf::Vector2f(xpos, ypos - 0.2)); // 0.02
     }
-    void setMoveflag(bool flag)
+    sf::Sprite getSprite()
     {
-        moveFlag = flag;
-    }
-    bool getMoveFlag()
-    {
-        return moveFlag;
+        return sprite;
     }
 };
 
@@ -161,7 +159,7 @@ public:
         sprite.setTexture(highAttackTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
         sprite.setScale(sf::Vector2f(0.3, 0.3));
-        sprite.setPosition(sf::Vector2f(300, 450));
+        sprite.setPosition(sf::Vector2f(300, 400));
     }
     void AttackEnemy() {}
     void TakeDamage(int damage)
@@ -192,8 +190,8 @@ public:
         cout << "High Defence sprite loaded." << endl;
         sprite.setTexture(highDefenceTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-        sprite.setPosition(sf::Vector2f(300, 450));
         sprite.setScale(sf::Vector2f(0.3, 0.3));
+        sprite.setPosition(sf::Vector2f(300, 400));
     }
     void AttackEnemy() {}
     void TakeDamage(int damage)
@@ -225,8 +223,8 @@ public:
         cout << "Mid sprite loaded." << endl;
         sprite.setTexture(MidTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-        sprite.setPosition(sf::Vector2f(300, 450));
         sprite.setScale(sf::Vector2f(0.3, 0.3));
+        sprite.setPosition(sf::Vector2f(300, 400));
     }
     void AttackEnemy() {}
     void TakeDamage(int damage)
@@ -257,8 +255,8 @@ public:
         cout << "Legendary sprite loaded." << endl;
         sprite.setTexture(LegendaryTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-        sprite.setPosition(sf::Vector2f(300, 450));
         sprite.setScale(sf::Vector2f(0.3, 0.3));
+        sprite.setPosition(sf::Vector2f(300, 400));
     }
     void AttackEnemy() {}
     void TakeDamage(int damage)
@@ -311,6 +309,11 @@ int main()
     int midCount = 0;
     int lgCount = 0;
 
+    bool HighAttackMove = true;
+    bool HighDefenceMove = true;
+    // bool MidMove=true;
+    // bool LegendaryMove=true;
+
     // created two towers objects
     Tower PlayerTower;
     Tower EnemyTower;
@@ -325,10 +328,10 @@ int main()
     float xMiddle = windowWidth / 2;
 
     //  (close to the top of the window)
-    float yTop = 50;
+    float yTop = 70;
 
     // (close to the bottom of the window)
-    float yBottom = windowHeight - 50;
+    float yBottom = windowHeight - 70;
 
     // Set the position of the top middle tower
     EnemyTower.setPosition(xMiddle, yTop);
@@ -368,6 +371,10 @@ int main()
                             haCount++;
                             flag = 0;
                         }
+                        // if(ha[haCount]->getSprite().getGlobalBounds().intersects(EnemyTower.getSprite().getGlobalBounds())){//check interseciton
+                        //     HighAttackMove=false;//flag to indicate stop moving
+                        //     EnemyTower.setHealth(10);//10 damage done by highattack for every attack
+                        // }
                     }
                 }
                 if (event.key.code == sf::Keyboard::W)
@@ -388,9 +395,13 @@ int main()
                             hdCount++;
                             flag = 0;
                         }
+                        //  if(hd[hdCount]->getSprite().getGlobalBounds().intersects(EnemyTower.getSprite().getGlobalBounds())){//check interseciton
+                        //     HighDefenceMove=false;//flag to indicate to stop moving
+                        //     EnemyTower.setHealth(5);//5 damage done by highdefence for every attack
+                        // }
                     }
                 }
-                if (event.key.code == sf::Keyboard::E) // sprite not loading!
+                if (event.key.code == sf::Keyboard::E)
                 {
                     if (midCount < MaxCardsOfEachType)
                     {
@@ -432,6 +443,15 @@ int main()
                 }
             }
 
+            // to check for intersection
+            for (int i = 0; i <= haCount; i++)
+            {
+                if (EnemyTower.getSprite().getGlobalBounds().intersects(ha[i]->getSprite().getGlobalBounds()))
+                {                            
+                    HighAttackMove = false;   // flag to indicate stop moving
+                    EnemyTower.setHealth(10); // 10 damage done by highattack for every attack
+                }
+            }
             // to delete all objects
 
             for (int i = 0; i < haCount; i++)
@@ -479,49 +499,26 @@ int main()
                 }
             }
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-            {
-                flag = 1;
-            }
+            // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            // {
+            //     flag = 1;
+            // }
         }
-        // checking intersection with enemy towerfor all objects
-        for (int i = 0; i < haCount; i++)
-        {
-            if (ha[i]->getSprite().getGlobalBounds().intersects(EnemyTower.getSprite().getGlobalBounds()))
-            {
-                ha[i]->setMoveflag(false);
-            }
-        }
-        for (int i = 0; i < hdCount; i++)
-        {
-            if (hd[i]->getSprite().getGlobalBounds().intersects(EnemyTower.getSprite().getGlobalBounds()))
-            {
-                hd[i]->setMoveflag(false);
-            }
-        }
-        for (int i = 0; i < midCount; i++)
-        {
-            if (mid[i]->getSprite().getGlobalBounds().intersects(EnemyTower.getSprite().getGlobalBounds()))
-            {
-                mid[i]->setMoveflag(false);
-            }
-        }
-        for (int i = 0; i < lgCount; i++)
-        {
-            if (lg[i]->getSprite().getGlobalBounds().intersects(EnemyTower.getSprite().getGlobalBounds()))
-            {
-                lg[i]->setMoveflag(false);
-            }
-        }
+
         window.clear();
 
+        bool drawTower = true;
+        if (EnemyTower.getHealth() == 0 || PlayerTower.getHealth() == 0)
+        {
+            drawTower = false;
+        }
         // draw all objects
         for (int i = 0; i < haCount; ++i)
         {
             if (ha[i])
             {
                 ha[i]->draw(window);
-                if (ha[i]->getMoveFlag())
+                if (HighAttackMove == true)
                 {
                     ha[i]->move();
                 }
@@ -531,8 +528,9 @@ int main()
         {
             if (hd[i])
             {
+
                 hd[i]->draw(window);
-                if (hd[i]->getMoveFlag())
+                if (HighDefenceMove == true)
                 {
                     hd[i]->move();
                 }
@@ -543,10 +541,7 @@ int main()
             if (mid[i])
             {
                 mid[i]->draw(window);
-                if (mid[i]->getMoveFlag())
-                {
-                    mid[i]->move();
-                }
+                mid[i]->move();
             }
         }
         for (int i = 0; i < lgCount; ++i)
@@ -554,15 +549,20 @@ int main()
             if (lg[i])
             {
                 lg[i]->draw(window);
-                if (lg[i]->getMoveFlag())
-                {
-                    lg[i]->move();
-                }
+                lg[i]->move();
             }
         }
-
-        PlayerTower.draw(window);
-        EnemyTower.draw(window);
+        if (drawTower == true)
+        {
+            PlayerTower.draw(window);
+            EnemyTower.draw(window);
+        }
+        else
+        {
+            cout << endl
+                 << "Tower Destroyed. Game Over." << endl;
+            // system("pause");
+        }
 
         window.display();
     }
