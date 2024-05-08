@@ -46,6 +46,11 @@ public:
             sprite.setPosition(sf::Vector2f(300, 300));
         }
     }
+    // get sprite
+    sf::Sprite getSprite()
+    {
+        return sprite;
+    }
 
     // Set position
     void setPosition(float x, float y)
@@ -55,6 +60,7 @@ public:
     void setHealth(int damage)
     {
         health -= damage;
+        cout << health << " ";
         if (health <= 0)
             health = 0;
     }
@@ -65,7 +71,7 @@ public:
     }
 
     // Draw function
-    void draw(sf::RenderWindow& window)
+    void draw(sf::RenderWindow &window)
     {
         window.draw(sprite);
     }
@@ -98,43 +104,44 @@ public:
     }
 
     void draw(sf::RenderWindow &window)
-{
-    if (!isDestroyed)
     {
-        window.draw(sprite);
+        if (!isDestroyed)
+        {
+            window.draw(sprite);
+        }
     }
-}
- void drawSprite(sf::RenderWindow &window)
-{
-    if (!isDestroyed)
+    void drawSprite(sf::RenderWindow &window)
     {
-        window.draw(sprite);
+        if (!isDestroyed)
+        {
+            window.draw(sprite);
+        }
     }
-}
-void destroy()
-{
-    isDestroyed = true;
-}
-bool destroyed()
-{
-    return isDestroyed;
-}
-void setInitPos()
-{
-    sprite.setPosition(sf::Vector2f(2, 2));
-}
-void move()
-{
-    float xpos , ypos ;
-    xpos = sprite.getPosition().x;
-    ypos = sprite.getPosition().y ;
+    void destroy()
+    {
+        isDestroyed = true;
+    }
+    bool destroyed()
+    {
+        return isDestroyed;
+    }
+    void setInitPos()
+    {
+        sprite.setPosition(sf::Vector2f(2, 2));
+    }
+    void move()
+    {
+        float xpos, ypos;
+        xpos = sprite.getPosition().x;
+        ypos = sprite.getPosition().y;
 
-    sprite.setPosition(sf::Vector2f(xpos, ypos-0.02));
-    
-}
-
-}
-;
+        sprite.setPosition(sf::Vector2f(xpos, ypos - 0.2));//0.02
+    }
+    sf::Sprite getSprite()
+    {
+        return sprite;
+    }
+};
 
 class HighAttack : public Card
 {
@@ -151,7 +158,7 @@ public:
         cout << " High Attack sprite loaded." << endl;
         sprite.setTexture(highAttackTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-        sprite.setScale(sf::Vector2f(0.3,0.3));
+        sprite.setScale(sf::Vector2f(0.3, 0.3));
         sprite.setPosition(sf::Vector2f(300, 400));
     }
     void AttackEnemy() {}
@@ -183,7 +190,7 @@ public:
         cout << "High Defence sprite loaded." << endl;
         sprite.setTexture(highDefenceTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-        sprite.setScale(sf::Vector2f(0.3,0.3));
+        sprite.setScale(sf::Vector2f(0.3, 0.3));
         sprite.setPosition(sf::Vector2f(300, 400));
     }
     void AttackEnemy() {}
@@ -216,7 +223,7 @@ public:
         cout << "Mid sprite loaded." << endl;
         sprite.setTexture(MidTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-        sprite.setScale(sf::Vector2f(0.3,0.3));
+        sprite.setScale(sf::Vector2f(0.3, 0.3));
         sprite.setPosition(sf::Vector2f(300, 400));
     }
     void AttackEnemy() {}
@@ -248,7 +255,7 @@ public:
         cout << "Legendary sprite loaded." << endl;
         sprite.setTexture(LegendaryTexture);
         sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-        sprite.setScale(sf::Vector2f(0.3,0.3));
+        sprite.setScale(sf::Vector2f(0.3, 0.3));
         sprite.setPosition(sf::Vector2f(300, 400));
     }
     void AttackEnemy() {}
@@ -266,18 +273,21 @@ public:
     }
 };
 
-bool coolDown(int coolDownSeconds){
+bool coolDown(int coolDownSeconds)
+{
     auto currentTime = std::chrono::steady_clock::now();
     static auto startTime = currentTime;
     auto timeSinceLast = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime);
 
-    if (timeSinceLast < std::chrono::seconds(coolDownSeconds)) {
+    if (timeSinceLast < std::chrono::seconds(coolDownSeconds))
+    {
         std::cout << "Card is still on cooldown. Remaining time: " << (coolDownSeconds - timeSinceLast.count()) << " seconds." << std::endl;
         return false;
     }
-     else {
-        startTime = currentTime; 
-        return true;  
+    else
+    {
+        startTime = currentTime;
+        return true;
     }
 }
 
@@ -285,21 +295,26 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(600, 600), ("Deck Defenders"));
 
-    //the max num of each class cards can be 10
+    // the max num of each class cards can be 10
     int MaxCardsOfEachType = 10;
 
-    //allocated memory for each class (Max of 10 cards of each type)
-    HighAttack** ha = new HighAttack*[MaxCardsOfEachType];
-    HighDefence** hd = new HighDefence*[MaxCardsOfEachType];
-    Mid** mid = new Mid*[MaxCardsOfEachType];
-    Legendary** lg = new Legendary*[MaxCardsOfEachType];
+    // allocated memory for each class (Max of 10 cards of each type)
+    HighAttack **ha = new HighAttack *[MaxCardsOfEachType];
+    HighDefence **hd = new HighDefence *[MaxCardsOfEachType];
+    Mid **mid = new Mid *[MaxCardsOfEachType];
+    Legendary **lg = new Legendary *[MaxCardsOfEachType];
 
     int haCount = 0;
     int hdCount = 0;
     int midCount = 0;
     int lgCount = 0;
 
-    //created two towers objects
+    bool HighAttackMove = true;
+    bool HighDefenceMove = true;
+    // bool MidMove=true;
+    // bool LegendaryMove=true;
+
+    // created two towers objects
     Tower PlayerTower;
     Tower EnemyTower;
 
@@ -316,7 +331,7 @@ int main()
     float yTop = 70;
 
     // (close to the bottom of the window)
-    float yBottom = windowHeight-70;
+    float yBottom = windowHeight - 70;
 
     // Set the position of the top middle tower
     EnemyTower.setPosition(xMiddle, yTop);
@@ -356,6 +371,10 @@ int main()
                             haCount++;
                             flag = 0;
                         }
+                        // if(ha[haCount]->getSprite().getGlobalBounds().intersects(EnemyTower.getSprite().getGlobalBounds())){//check interseciton
+                        //     HighAttackMove=false;//flag to indicate stop moving
+                        //     EnemyTower.setHealth(10);//10 damage done by highattack for every attack
+                        // }
                     }
                 }
                 if (event.key.code == sf::Keyboard::W)
@@ -376,9 +395,13 @@ int main()
                             hdCount++;
                             flag = 0;
                         }
+                        //  if(hd[hdCount]->getSprite().getGlobalBounds().intersects(EnemyTower.getSprite().getGlobalBounds())){//check interseciton
+                        //     HighDefenceMove=false;//flag to indicate to stop moving
+                        //     EnemyTower.setHealth(5);//5 damage done by highdefence for every attack
+                        // }
                     }
                 }
-                if (event.key.code == sf::Keyboard::E) 
+                if (event.key.code == sf::Keyboard::E)
                 {
                     if (midCount < MaxCardsOfEachType)
                     {
@@ -420,11 +443,20 @@ int main()
                 }
             }
 
+            // to check for intersection
+            for (int i = 0; i < haCount; i++)
+            {
+                if (ha[i]->getSprite().getGlobalBounds().intersects(EnemyTower.getSprite().getGlobalBounds()))
+                {                             // check interseciton
+                    HighAttackMove = false;   // flag to indicate stop moving
+                    EnemyTower.setHealth(10); // 10 damage done by highattack for every attack
+                }
+            }
             // to delete all objects
 
             for (int i = 0; i < haCount; i++)
             {
-                if (ha[i]!= nullptr)
+                if (ha[i] != nullptr)
                 {
                     if (ha[i]->getHealth() == 0)
                     {
@@ -435,18 +467,18 @@ int main()
             }
             for (int i = 0; i < hdCount; i++)
             {
-                if (hd[i]!= nullptr)
+                if (hd[i] != nullptr)
                 {
                     if (hd[i]->getHealth() == 0)
                     {
-                       delete hd[i];
+                        delete hd[i];
                         hd[i] = nullptr;
                     }
                 }
             }
             for (int i = 0; i < midCount; i++)
             {
-                if (mid[i]!= nullptr)
+                if (mid[i] != nullptr)
                 {
                     if (mid[i]->getHealth() == 0)
                     {
@@ -457,7 +489,7 @@ int main()
             }
             for (int i = 0; i < lgCount; i++)
             {
-                if (lg[i]!= nullptr)
+                if (lg[i] != nullptr)
                 {
                     if (lg[i]->getHealth() == 0)
                     {
@@ -467,38 +499,47 @@ int main()
                 }
             }
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-            {
-                flag = 1;
-            }
+            // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            // {
+            //     flag = 1;
+            // }
         }
 
         window.clear();
 
-        //draw all objects
+        bool drawTower = true;
+        if (EnemyTower.getHealth() == 0 || PlayerTower.getHealth() == 0)
+        {
+            drawTower = false;
+        }
+        // draw all objects
         for (int i = 0; i < haCount; ++i)
         {
             if (ha[i])
             {
-               
                 ha[i]->draw(window);
-                ha[i]->move();
+                if (HighAttackMove == true)
+                {
+                    ha[i]->move();
+                }
             }
         }
         for (int i = 0; i < hdCount; ++i)
         {
             if (hd[i])
             {
-                
+
                 hd[i]->draw(window);
-                hd[i]->move();
+                if (HighDefenceMove == true)
+                {
+                    hd[i]->move();
+                }
             }
         }
         for (int i = 0; i < midCount; ++i)
         {
             if (mid[i])
             {
-                
                 mid[i]->draw(window);
                 mid[i]->move();
             }
@@ -507,14 +548,20 @@ int main()
         {
             if (lg[i])
             {
-               
                 lg[i]->draw(window);
                 lg[i]->move();
             }
         }
-
-        PlayerTower.draw(window);
-        EnemyTower.draw(window);
+        if (drawTower == true)
+        {
+            PlayerTower.draw(window);
+            EnemyTower.draw(window);
+        }
+        else
+        {
+            cout << endl << "Tower Destroyed. Game Over."<<endl;
+                //system("pause");
+        }
 
         window.display();
     }
