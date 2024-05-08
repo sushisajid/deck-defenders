@@ -71,7 +71,7 @@ public:
     }
 
     // Draw function
-    void draw(sf::RenderWindow& window)
+    void draw(sf::RenderWindow &window)
     {
         window.draw(sprite);
     }
@@ -101,36 +101,6 @@ public:
     int getHealth()
     {
         return health;
-    }
-
-    void draw(sf::RenderWindow &window)
-{
-    if (!isDestroyed)
-    {
-        window.draw(sprite);
-    }
-}
- void drawSprite(sf::RenderWindow &window)
-{
-    if (!isDestroyed)
-    {
-        window.draw(sprite);
-    }
-}
-void destroy()
-{
-    isDestroyed = true;
-}
-bool destroyed()
-{
-    return isDestroyed;
-}
-void move()
-{
-    sprite.setPosition(sf::Vector2f(2, 2));
-}
-}
-;
     }
 
     void draw(sf::RenderWindow &window)
@@ -370,7 +340,6 @@ int main()
     PlayerTower.setPosition(xMiddle, yBottom);
 
     int flag = 1;
-    int flag = 1;
     while (window.isOpen())
     {
         sf::Event event;
@@ -386,15 +355,6 @@ int main()
 
                 if (event.key.code == sf::Keyboard::Q)
                 {
-                    if (haCount < MaxCardsOfEachType)
-                    {
-                        if (flag == 0)
-                        {
-                            if (coolDown(5) == true)
-                            {
-                                ha[haCount] = new HighAttack(5, 5, 10, 5);
-                                haCount++;
-                            }
                     if (haCount < MaxCardsOfEachType)
                     {
                         if (flag == 0)
@@ -428,15 +388,6 @@ int main()
                                 hd[hdCount] = new HighDefence(5, 5, 10, 5);
                                 hdCount++;
                             }
-                    if (hdCount < MaxCardsOfEachType)
-                    {
-                        if (flag == 0)
-                        {
-                            if (coolDown(5) == true)
-                            {
-                                hd[hdCount] = new HighDefence(5, 5, 10, 5);
-                                hdCount++;
-                            }
                         }
                         else
                         {
@@ -453,7 +404,6 @@ int main()
                 if (event.key.code == sf::Keyboard::E)
                 {
                     if (midCount < MaxCardsOfEachType)
-                    if (midCount < MaxCardsOfEachType)
                     {
                         if (flag == 0)
                         {
@@ -462,19 +412,7 @@ int main()
                                 mid[midCount] = new Mid(5, 5, 10, 5);
                                 midCount++;
                             }
-                        if (flag == 0)
-                        {
-                            if (coolDown(5) == true)
-                            {
-                                mid[midCount] = new Mid(5, 5, 10, 5);
-                                midCount++;
-                            }
                         }
-                        else
-                        {
-                            mid[midCount] = new Mid(5, 5, 10, 5);
-                            midCount++;
-                            flag = 0;
                         else
                         {
                             mid[midCount] = new Mid(5, 5, 10, 5);
@@ -486,15 +424,7 @@ int main()
                 if (event.key.code == sf::Keyboard::R)
                 {
                     if (lgCount < MaxCardsOfEachType)
-                    if (lgCount < MaxCardsOfEachType)
                     {
-                        if (flag == 0)
-                        {
-                            if (coolDown(10) == true)
-                            {
-                                lg[lgCount] = new Legendary(5, 5, 10, 5);
-                                lgCount++;
-                            }
                         if (flag == 0)
                         {
                             if (coolDown(10) == true)
@@ -529,10 +459,7 @@ int main()
                 if (ha[i] != nullptr)
                 {
                     if (ha[i]->getHealth() == 0)
-                    if (ha[i]->getHealth() == 0)
                     {
-                        delete ha[i];
-                        ha[i] = nullptr;
                         delete ha[i];
                         ha[i] = nullptr;
                     }
@@ -542,7 +469,6 @@ int main()
             {
                 if (hd[i] != nullptr)
                 {
-                    if (hd[i]->getHealth() == 0)
                     if (hd[i]->getHealth() == 0)
                     {
                         delete hd[i];
@@ -555,10 +481,7 @@ int main()
                 if (mid[i] != nullptr)
                 {
                     if (mid[i]->getHealth() == 0)
-                    if (mid[i]->getHealth() == 0)
                     {
-                        delete mid[i];
-                        mid[i] = nullptr;
                         delete mid[i];
                         mid[i] = nullptr;
                     }
@@ -569,10 +492,7 @@ int main()
                 if (lg[i] != nullptr)
                 {
                     if (lg[i]->getHealth() == 0)
-                    if (lg[i]->getHealth() == 0)
                     {
-                        delete lg[i];
-                        lg[i] = nullptr;
                         delete lg[i];
                         lg[i] = nullptr;
                     }
@@ -645,8 +565,6 @@ int main()
 
         window.display();
     }
-
-    return 0;
 
     return 0;
 }
