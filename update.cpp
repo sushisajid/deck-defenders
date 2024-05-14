@@ -4,7 +4,6 @@
 #include <thread> //3rd and 4th libraries are for cooldown
 #include <ctime>
 #include <SFML/Graphics.hpp>
-#include<unistd.h>
 
 using namespace std;
 using namespace chrono;
@@ -22,10 +21,12 @@ public:
     Tower(int h = 100) : health(h)
     {
     }
-    void setTexture(int num){
+    void setTexture(int num)
+    {
         // Load the texture from the file
-        if(num==1){//if num is 1 tou enemy ka texture load ho
-            if (!TowerTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/king tower.png"))
+        if (num == 1)
+        { // if num is 1 tou enemy ka texture load ho
+            if (!TowerTexture.loadFromFile("C:/Users/Muntaha/OneDrive/Desktop/Semester 2/OOP/project/tower.png"))
             {
                 std::cout << "Tower sprite not loaded." << std::endl;
             }
@@ -46,28 +47,29 @@ public:
                 sprite.setPosition(sf::Vector2f(300, 300));
             }
         }
-        else if(num==0){
+        else if (num == 0)
+        {
             // Load the texture from the file
-        if (!TowerTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/apni tower.png"))
-        {
-            std::cout << "Tower sprite not loaded." << std::endl;
-        }
-        else
-        {
-            std::cout << " Tower sprite loaded." << std::endl;
-            // Set the texture of the sprite
-            sprite.setTexture(TowerTexture);
-            float scaleFactor = 0.2f; // You can adjust this value as needed
+            if (!TowerTexture.loadFromFile("C:/Users/Muntaha/OneDrive/Desktop/Semester 2/OOP/project/playerTower.jpeg"))
+            {
+                std::cout << "Tower sprite not loaded." << std::endl;
+            }
+            else
+            {
+                std::cout << " Tower sprite loaded." << std::endl;
+                // Set the texture of the sprite
+                sprite.setTexture(TowerTexture);
+                float scaleFactor = 0.2f; // You can adjust this value as needed
 
-            // Apply the scaling factors to the sprite
-            sprite.setScale(scaleFactor, scaleFactor);
+                // Apply the scaling factors to the sprite
+                sprite.setScale(scaleFactor, scaleFactor);
 
-            // Set the origin of the sprite to its center
-            sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
+                // Set the origin of the sprite to its center
+                sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
 
-            // Set the position of the sprite
-            sprite.setPosition(sf::Vector2f(300, 300));
-        }
+                // Set the position of the sprite
+                sprite.setPosition(sf::Vector2f(300, 300));
+            }
         }
     }
 
@@ -183,7 +185,7 @@ public:
     HighAttack(int h = 100, int d = 5, int a = 10, int cds = 5) : Card(h, d, a, cds)
     {
 
-        if (!highAttackTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/High Attack.jpg"))
+        if (!highAttackTexture.loadFromFile("C:/Users/Muntaha/OneDrive/Desktop/Semester 2/OOP/project/highattack.jpeg"))
         {
             cout << "High Attack sprite not loaded." << endl;
         }
@@ -225,7 +227,7 @@ public:
     HighDefence(int h = 100, int d = 10, int a = 5, int cds = 5) : Card(h, d, a, cds)
     {
 
-        if (!highDefenceTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/High Defense.jpg"))
+        if (!highDefenceTexture.loadFromFile("C:/Users/Muntaha/OneDrive/Desktop/Semester 2/OOP/project/highdefence.jpeg"))
         {
             cout << "High Defence sprite not loaded." << endl;
         }
@@ -267,7 +269,7 @@ public:
     Mid(int h = 100, int d = 5, int a = 5, int cds = 5) : Card(h, d, a, cds)
     {
 
-        if (!MidTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/Mid.jpg"))
+        if (!MidTexture.loadFromFile("C:/Users/Muntaha/OneDrive/Desktop/Semester 2/OOP/project/mid.jpeg"))
         {
             cout << "Mid sprite not loaded." << endl;
         }
@@ -309,7 +311,7 @@ public:
     Legendary(int h = 100, int d = 20, int a = 20, int cds = 10) : Card(h, d, a, cds)
     {
 
-        if (!LegendaryTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/Legendary.jpg"))
+        if (!LegendaryTexture.loadFromFile("C:/Users/Muntaha/OneDrive/Desktop/Semester 2/OOP/project/legendary.jpeg"))
         {
             cout << "Legendary sprite not loaded." << endl;
         }
@@ -419,7 +421,7 @@ public:
     EnemyHighAttack(int h = 100, int d = 5, int a = 10, int cds = 5) : EnemyCard(h, d, a, cds)
     {
 
-        if (!highAttackTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/High Attack.jpg"))
+        if (!highAttackTexture.loadFromFile("C:/Users/Muntaha/OneDrive/Desktop/Semester 2/OOP/project/highattack.jpeg"))
         {
             cout << "Enemy High Attack sprite not loaded." << endl;
         }
@@ -461,7 +463,7 @@ public:
     EnemyHighDefence(int h = 100, int d = 10, int a = 5, int cds = 5) : EnemyCard(h, d, a, cds)
     {
 
-        if (!highDefenceTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/High Defense.jpg"))
+        if (!highDefenceTexture.loadFromFile("C:/Users/Muntaha/OneDrive/Desktop/Semester 2/OOP/project/highdefence.jpeg"))
         {
             cout << "Enemy High Defence sprite not loaded." << endl;
         }
@@ -503,7 +505,7 @@ public:
     EnemyMid(int h = 100, int d = 5, int a = 5, int cds = 5) : EnemyCard(h, d, a, cds)
     {
 
-        if (!MidTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/Mid.jpg"))
+        if (!MidTexture.loadFromFile("C:/Users/Muntaha/OneDrive/Desktop/Semester 2/OOP/project/mid.jpeg"))
         {
             cout << "Enemy Mid sprite not loaded." << endl;
         }
@@ -545,7 +547,7 @@ public:
     EnemyLegendary(int h = 100, int d = 20, int a = 20, int cds = 10) : EnemyCard(h, d, a, cds)
     {
 
-        if (!LegendaryTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/Legendary.jpg"))
+        if (!LegendaryTexture.loadFromFile("C:/Users/Muntaha/OneDrive/Desktop/Semester 2/OOP/project/legendary.jpeg"))
         {
             cout << "Enemy Legendary sprite not loaded." << endl;
         }
@@ -657,7 +659,7 @@ int main()
 
     // background setup
     sf::Texture backgroundTexture;
-    if (!backgroundTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/Map.jpg"))
+    if (!backgroundTexture.loadFromFile("C:/Users/Muntaha/OneDrive/Desktop/Semester 2/OOP/project/background.jpeg"))
     {
         cout << "Background not loaded" << endl;
     }
@@ -676,19 +678,21 @@ int main()
     int ElgCheck = 0;
     sf::Texture loadingScreenTexture;
     sf::Sprite loadingScreen;
-    if(!loadingScreenTexture.loadFromFile("C:/Users/Administrator/Desktop/game practice/images/loadingScreen.jpg")){
-        cout<<"Loading screen not loaded"<<endl;
+    if (!loadingScreenTexture.loadFromFile("C:/Users/Muntaha/OneDrive/Desktop/Semester 2/OOP/project/start.jpeg"))
+    {
+        cout << "Loading screen not loaded" << endl;
     }
-    else{
+    else
+    {
         loadingScreen.setTexture(loadingScreenTexture);
-        
     }
     window.draw(loadingScreen);
-    cout<<"Loading screen drawn"<<endl;
+    cout << "Loading screen drawn" << endl;
     window.display();
-    sleep(3);
+    // sleep(3);
+    std::this_thread::sleep_for(std::chrono::seconds(3));
 
-   // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     while (window.isOpen())
     {
         sf::Event event;
@@ -710,14 +714,14 @@ int main()
                         {
                             if (coolDown(5) == true)
                             {
-                                ha[haCount] = new HighAttack(100, 3, 40, 5);
+                                ha[haCount] = new HighAttack(100, 5, 15, 5);
                                 haCount++;
                                 enemySpawnFlag += 1;
                             }
                         }
                         else
                         {
-                            ha[haCount] = new HighAttack(100, 3, 40, 5);
+                            ha[haCount] = new HighAttack(100, 5, 15, 5);
                             haCount++;
                             flag = 0;
                             enemySpawnFlag += 1;
@@ -732,14 +736,14 @@ int main()
                         {
                             if (coolDown(5) == true)
                             {
-                                hd[hdCount] = new HighDefence(100, 10, 5, 5);
+                                hd[hdCount] = new HighDefence(100, 7, 10, 5);
                                 hdCount++;
                                 enemySpawnFlag += 1;
                             }
                         }
                         else
                         {
-                            hd[hdCount] = new HighDefence(100, 10, 5, 5);
+                            hd[hdCount] = new HighDefence(100, 7, 10, 5);
                             hdCount++;
                             flag = 0;
                             enemySpawnFlag += 1;
@@ -754,14 +758,14 @@ int main()
                         {
                             if (coolDown(5) == true)
                             {
-                                mid[midCount] = new Mid(100, 6, 25, 5);
+                                mid[midCount] = new Mid(100, 6, 8, 5);
                                 midCount++;
                                 enemySpawnFlag += 1;
                             }
                         }
                         else
                         {
-                            mid[midCount] = new Mid(100, 6, 25, 5);
+                            mid[midCount] = new Mid(100, 6, 8, 5);
                             midCount++;
                             flag = 0;
                             enemySpawnFlag += 1;
@@ -776,14 +780,14 @@ int main()
                         {
                             if (coolDown(10) == true)
                             {
-                                lg[lgCount] = new Legendary(100, 20, 40, 5);
+                                lg[lgCount] = new Legendary(100, 10, 17, 5);
                                 lgCount++;
                                 enemySpawnFlag += 1;
                             }
                         }
                         else
                         {
-                            lg[lgCount] = new Legendary(100, 20, 40, 5);
+                            lg[lgCount] = new Legendary(100, 10, 17, 5);
                             lgCount++;
                             flag = 0;
                             enemySpawnFlag += 1;
@@ -794,15 +798,16 @@ int main()
 
                 cout << "EnemySpawnFlag: " << enemySpawnFlag << endl;
                 // for enemy
-                if (enemySpawnFlag %2 == 0)
+                if (enemySpawnFlag % 2 == 0)
                 {
-                    random = 4; //(rand()%4)+1; // random generation between 1 and 4
+                    // random = 4;
+                    random = (rand() % 4) + 1; // random generation between 1 and 4
 
                     if (random == 1)
                     {
                         if (eHaCount < MaxCardsOfEachType)
                         {
-                            Eha[eHaCount] = new EnemyHighAttack(100, 3, 40, 5);
+                            Eha[eHaCount] = new EnemyHighAttack(100, 5, 15, 5);
                             eHaCount++;
                         }
                     }
@@ -810,7 +815,7 @@ int main()
                     {
                         if (eHdCount < MaxCardsOfEachType)
                         {
-                            Ehd[eHdCount] = new EnemyHighDefence(100, 10, 5, 5);
+                            Ehd[eHdCount] = new EnemyHighDefence(100, 7, 10, 5);
                             eHdCount++;
                         }
                     }
@@ -818,7 +823,7 @@ int main()
                     {
                         if (eMidCount < MaxCardsOfEachType)
                         {
-                            Emid[eMidCount] = new EnemyMid(100, 6, 25, 65);
+                            Emid[eMidCount] = new EnemyMid(100, 6, 8, 5);
                             eMidCount++;
                         }
                     }
@@ -826,7 +831,7 @@ int main()
                     {
                         if (eLgCount < MaxCardsOfEachType)
                         {
-                            Elg[eLgCount] = new EnemyLegendary(100, 20, 40, 5);
+                            Elg[eLgCount] = new EnemyLegendary(100, 10, 17, 5);
                             eLgCount++;
                         }
                     }
@@ -971,7 +976,7 @@ int main()
                     hd[i]->TakeDamage(Ehd[j]->getAttack());
                     Ehd[j]->TakeDamage(hd[i]->getAttack());
                     cout << "Player card health: " << hd[i]->getHealth() << endl;
-                    cout << " Card damage is 0"; // this is working
+                    // cout << " Card damage is 0"; // this is working
                     hdCheck = 1;
                     EhdCheck = 1;
                 }
@@ -1463,11 +1468,11 @@ int main()
                 }
             }
         }
-        
+
         window.clear();
         window.draw(background);
-        
-                                            // draw all objects
+
+        // draw all objects
 
         // for player
         for (int i = 0; i < haCount; ++i)
@@ -1595,8 +1600,8 @@ int main()
             {
             }
         }
-        
-        //for towers
+
+        // for towers
         if (PlayerTowerAlive)
         {
             PlayerTower.draw(window);
@@ -1620,8 +1625,7 @@ int main()
             //  system("pause");
             //  cin.get()
         }
-        
-        
+
         window.display();
     }
 
