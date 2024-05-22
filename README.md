@@ -1,5 +1,8 @@
 # Deck Defenders
 
+updated.cpp is the main cpp file
+
+
 At some point in our lives we may have come across a Supercell game, these were and still are huge in the mobile game industry. One of these games is "Clash Royale".
 
 Clash Royale is sadly very complicated to play now with hundreds of different card types and combinations, so much that it becomes frustrating for beginners.
