@@ -8,8 +8,11 @@ That is where Deck Defenders comes in. With only 4 different types of cards; Hig
 
 Features:
 -HighAttack card is the quickest and has one of the highest attacks in the game. It can be deployed using the Q key.
+
 -HighDefence card is the tank of the game has the highest hitpoints in the game. It can be deployed using the W key.
+
 -Mid card has the average damage and health. It can be deployed using the W key.
+
 -Legendary card is the most powerful card in the game. It can be deployed using the E key.
 
 After deploying each card, the player has to wait for the cooldown effect to stop in order to use the next card. Each card has a 5 second cooldown whereas the Legendary has a 10 second cooldown.
